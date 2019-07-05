@@ -1,0 +1,36 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import AppRouter from './routers/AppRouter.jsx'
+import { Provider } from 'react-redux';
+import store from './redux/store/store.jsx'
+import 'normalize.css';
+import './styles/styles.scss';
+import { addExpense } from './redux/actions/expenses.jsx';
+import { setTextFilter } from './redux/actions/filters.jsx';
+import { getVisibleExpenses } from './redux/selectors/expenses.jsx';
+import 'react-dates/lib/css/_datepicker.css'
+
+
+const reduxStore = store();
+
+
+reduxStore.dispatch(addExpense({ description: 'Water bill', amount: 1000 }))
+reduxStore.dispatch(addExpense({ description: 'Rent bill', amount: 2000 }))
+reduxStore.dispatch(addExpense({ description: 'Gas bill' }))
+//reduxStore.dispatch(setTextFilter('gas'))
+
+const state = reduxStore.getState()
+const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
+console.log(visibleExpenses)
+
+//const state = reduxStore.getState()
+console.log(reduxStore.getState())
+
+const jsx = (
+  <Provider store={reduxStore}>
+    <AppRouter />
+  </Provider>
+
+)
+
+ReactDOM.render(jsx, document.getElementById('root'))
